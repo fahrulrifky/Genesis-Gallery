@@ -406,6 +406,35 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    /* RESPONSIVE (MOBILE) */
+    .header-left { width: 150px; }
+    .header-right { width: 150px; text-align: right; }
+    
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        padding: 1rem;
+        padding-top: 3.5rem; /* Memberikan ruang untuk logo global */
+        gap: 0.5rem;
+      }
+      .header-left { display: none; }
+      .header-right {
+        width: 100%;
+        text-align: center;
+      }
+      header h1 { font-size: 1.5rem; }
+      p.subtitle { font-size: 0.8rem; }
+      .global-logo {
+        width: 45px;
+        height: 45px;
+        top: 1rem;
+        left: 1rem;
+      }
+      .landing-content { padding: 1.5rem; margin: 1rem; }
+      .landing-content h1 { font-size: 1.8rem; }
+      .btn-connect-large { padding: 1rem; font-size: 0.85rem; }
+    }
   </style>
 </head>
 <body>
@@ -433,12 +462,12 @@
   <!-- MAIN APP CONTAINER -->
   <div id="app-container">
     <header>
-      <div style="width: 150px;"></div>
+      <div class="header-left"></div>
       <div class="header-content">
         <h1>RITUAL GENESIS GALLERY</h1>
         <p class="subtitle">Claim and display your Genesis Card On-Chain</p>
       </div>
-      <div style="width: 150px; text-align: right;">
+      <div class="header-right">
         <button class="btn-connect" id="btn-connect" onclick="connectWalletAndEnter()">Connected</button>
       </div>
     </header>
