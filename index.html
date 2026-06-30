@@ -697,7 +697,7 @@
         </div>
 
         <!-- CARD VIEW (For Claimed Slots) -->
-        <div id="modal-card-view" style="display: none; text-align: center;">
+        <div id="modal-card-view" style="display: none; text-align: center; position: relative;">
           <img id="card-view-img" src="" style="width: 100%; max-width: 400px; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
           <div style="font-size: 1rem; margin-bottom: 1rem;">
             <span style="color: #888;">Owner:</span> <span id="card-view-owner" style="color: var(--accent); font-weight: bold;"></span>
@@ -712,12 +712,12 @@
               <span id="card-view-discord" style="font-size: 1rem; font-weight: 600;"></span>
             </div>
           </div>
+          
+          <button id="btn-admin-delete" style="display: none; background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; position: absolute; bottom: 0; right: 0; transition: all 0.2s;" onclick="submitAdminDelete()" onmouseover="this.style.background='var(--danger)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='var(--danger)';">
+            <span id="btn-delete-text">Delete</span>
+            <div class="loader" id="delete-loader" style="width: 10px; height: 10px; border-width: 2px;"></div>
+          </button>
         </div>
-
-        <button class="btn-submit" id="btn-admin-delete" style="display: none; background: var(--danger); border-color: var(--danger); margin-top: 10px;" onclick="submitAdminDelete()">
-          <span id="btn-delete-text">Admin Delete Slot</span>
-          <div class="loader" id="delete-loader"></div>
-        </button>
         <div class="status-msg" id="status-msg"></div>
       </div>
     </div>
