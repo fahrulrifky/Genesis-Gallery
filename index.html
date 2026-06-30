@@ -699,8 +699,14 @@
         <!-- CARD VIEW (For Claimed Slots) -->
         <div id="modal-card-view" style="display: none; text-align: center; position: relative;">
           <img id="card-view-img" src="" style="width: 100%; max-width: 400px; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-          <div style="font-size: 1rem; margin-bottom: 1rem;">
+          <div style="font-size: 1rem; margin-bottom: 0.5rem;">
             <span style="color: #888;">Owner:</span> <span id="card-view-owner" style="color: var(--accent); font-weight: bold;"></span>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <a id="card-view-share-x" href="#" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #000; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.2); transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.background='#000';">
+              <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              Share on X
+            </a>
           </div>
           <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
             <div style="background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 8px; flex: 1;">
@@ -943,6 +949,9 @@
           document.getElementById('card-view-owner').innerText = cardData.owner ? (cardData.owner.substring(0,6) + "..." + cardData.owner.substring(38)) : "-";
           document.getElementById('card-view-x').innerText = cardData.xHandle || "-";
           document.getElementById('card-view-discord').innerText = cardData.discordHandle || "-";
+          
+          const tweetText = `My Genesis. On display. Forever.\n\n#${slotNo} / 1000\nhttps://genesis-ritual.vercel.app/\n\n@ritualnet @0xkrtka #BuildOnRitual #Genesis1000`;
+          document.getElementById('card-view-share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
         }
 
         if (isAdmin) {
