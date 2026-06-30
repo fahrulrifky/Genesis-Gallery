@@ -413,18 +413,26 @@
     
     @media (max-width: 768px) {
       header {
-        flex-direction: column;
+        flex-direction: row;
         padding: 1rem;
-        padding-top: 3.5rem; /* Memberikan ruang untuk logo global */
+        padding-top: 3.5rem;
         gap: 0.5rem;
+        justify-content: space-between;
+        align-items: center;
       }
       .header-left { display: none; }
       .header-right {
-        width: 100%;
+        width: auto;
+        text-align: right;
+      }
+      .header-content {
+        flex: 1;
         text-align: center;
       }
-      header h1 { font-size: 1.5rem; }
-      p.subtitle { font-size: 0.8rem; }
+      header h1 { font-size: 1.2rem; }
+      p.subtitle { font-size: 0.7rem; }
+      .btn-connect { padding: 0.6rem 1rem; font-size: 0.8rem; width: auto; margin-top: 0; }
+      
       .global-logo {
         width: 45px;
         height: 45px;
