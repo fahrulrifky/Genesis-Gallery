@@ -525,7 +525,7 @@
       <div class="header-left"></div>
       <div class="header-content">
         <h1>RITUAL GENESIS GALLERY</h1>
-        <p class="subtitle">Claim and display your Genesis Card On-Chain</p>
+        <p class="subtitle">Showcase your Genesis Card On-Chain</p>
       </div>
       <div class="header-right">
         <button class="btn-connect" id="btn-connect" onclick="connectWalletAndEnter()">Connected</button>
@@ -539,7 +539,7 @@
     <div class="modal-overlay" id="modal">
       <div class="modal">
         <span class="close-btn" onclick="closeModal()">✕</span>
-        <h2 id="modal-title">Claim Genesis #</h2>
+        <h2 id="modal-title">Showcase Genesis #</h2>
         <div class="form-group">
           <label>X (Twitter) Handle</label>
           <input type="text" id="x-handle" placeholder="@0xkrta">
@@ -553,7 +553,7 @@
           <input type="text" id="genesis-link" placeholder="https://www.ritualmap.net/genesis/...">
         </div>
         <button class="btn-submit" id="btn-submit" onclick="submitClaim()">
-          <span id="btn-text">Claim with Gas Fee</span>
+          <span id="btn-text">Showcase with Gas Fee</span>
           <div class="loader" id="submit-loader"></div>
         </button>
         <div class="status-msg" id="status-msg"></div>
@@ -710,7 +710,7 @@
     // Modal Logic
     function openModal(slotNo) {
       selectedSlot = slotNo;
-      document.getElementById('modal-title').innerText = `Claim Genesis #${slotNo}`;
+      document.getElementById('modal-title').innerText = `Showcase Genesis #${slotNo}`;
       document.getElementById('status-msg').innerText = '';
       
       const modal = document.getElementById('modal');
@@ -762,7 +762,7 @@
         await tx.wait();
 
         statusMsg.style.color = "#4ade80"; 
-        statusMsg.innerText = "Claim Successful!";
+        statusMsg.innerText = "Successfully Showcased!";
 
         updateSlotUI(selectedSlot, {
           xHandle,
