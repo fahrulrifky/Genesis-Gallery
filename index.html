@@ -243,20 +243,24 @@
       left: 8px;
       z-index: 2;
     }
-    .slot-content {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: rgba(255, 255, 255, 0.05);
-      transition: color 0.3s;
+    .empty-slot-logo {
+      width: 40%;
+      height: 40%;
+      object-fit: contain;
+      opacity: 0.1;
+      filter: grayscale(100%);
+      transition: all 0.4s ease;
     }
-    .genesis-slot:hover .slot-content {
-      color: rgba(234, 179, 8, 0.2);
+    .genesis-slot:hover .empty-slot-logo {
+      opacity: 0.5;
+      filter: grayscale(0%) drop-shadow(0 0 10px rgba(234, 179, 8, 0.5));
+      transform: scale(1.15) rotate(5deg);
     }
     .genesis-slot.claimed {
       background: rgba(234, 179, 8, 0.05);
       border-color: rgba(234, 179, 8, 0.4);
     }
-    .genesis-slot.claimed .slot-content {
+    .genesis-slot.claimed .empty-slot-logo {
       display: none;
     }
     .genesis-slot.claimed .card-img {
@@ -379,11 +383,23 @@
       float: right;
       cursor: pointer;
       color: var(--text-muted);
-      font-size: 1.2rem;
-      transition: color 0.2s;
+      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .close-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
     }
     .close-btn:hover {
       color: #fff;
+      background: rgba(234, 179, 8, 0.2);
+      transform: rotate(90deg);
     }
     .status-msg {
       margin-top: 1rem;
@@ -538,7 +554,9 @@
 
     <div class="modal-overlay" id="modal">
       <div class="modal">
-        <span class="close-btn" onclick="closeModal()">✕</span>
+        <span class="close-btn" onclick="closeModal()">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </span>
         <h2 id="modal-title">Showcase Genesis #</h2>
         <div class="form-group">
           <label>X (Twitter) Handle</label>
@@ -589,7 +607,7 @@
         slot.id = `slot-${i}`;
         slot.innerHTML = `
           <span class="slot-no">#${i}</span>
-          <div class="slot-content">?</div>
+          <img src="LOGO_RITUAL.png" class="empty-slot-logo" alt="Empty" onerror="this.style.display='none'" />
         `;
         slot.onclick = () => openModal(i);
         galleryEl.appendChild(slot);
