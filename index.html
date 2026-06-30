@@ -712,7 +712,13 @@
       slot.classList.add('claimed');
       
       let imgSrc = cardData.imageLink;
-      if (!imgSrc.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+      
+      if (imgSrc && imgSrc.includes("ritualmap.net/genesis/")) {
+        if (!imgSrc.endsWith("/card")) {
+          if (imgSrc.endsWith("/")) imgSrc = imgSrc.slice(0, -1);
+          imgSrc = imgSrc + "/card";
+        }
+      } else if (!imgSrc || !imgSrc.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
         imgSrc = `https://api.dicebear.com/7.x/identicon/svg?seed=${slotNo}&backgroundColor=eab308`;
       }
 
