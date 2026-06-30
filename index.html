@@ -499,11 +499,31 @@
           
           contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
           
-          document.getElementById('btn-connect').innerText = 
-            userAddress.substring(0, 6) + "..." + userAddress.substring(38);
-            
-          document.getElementById('btn-connect').style.background = "var(--accent)";
-          document.getElementById('btn-connect').style.color = "#000";
+          const btnConnect = document.getElementById('btn-connect');
+          btnConnect.innerText = userAddress.substring(0, 6) + "..." + userAddress.substring(38);
+          btnConnect.style.background = "var(--accent)";
+          btnConnect.style.color = "#000";
+          
+          // Ubah fungsi klik menjadi disconnect
+          btnConnect.onclick = disconnectWallet;
+          
+          // Efek hover untuk menampilkan tulisan Disconnect
+          btnConnect.addEventListener('mouseenter', () => {
+            if (userAddress) {
+              btnConnect.innerText = "Disconnect";
+              btnConnect.style.background = "var(--danger)";
+              btnConnect.style.color = "#fff";
+              btnConnect.style.borderColor = "var(--danger)";
+            }
+          });
+          btnConnect.addEventListener('mouseleave', () => {
+            if (userAddress) {
+              btnConnect.innerText = userAddress.substring(0, 6) + "..." + userAddress.substring(38);
+              btnConnect.style.background = "var(--accent)";
+              btnConnect.style.color = "#000";
+              btnConnect.style.borderColor = "var(--accent)";
+            }
+          });
           
           // Transisi dari Landing Page ke Main App
           enterMainGallery();
@@ -515,6 +535,15 @@
       } else {
         alert("Please install MetaMask to use this dApp!");
       }
+    }
+
+    function disconnectWallet() {
+      userAddress = null;
+      signer = null;
+      provider = null;
+      contract = null;
+      // Reload halaman untuk mereset state dan kembali ke landing page
+      window.location.reload();
     }
 
     function enterMainGallery() {
