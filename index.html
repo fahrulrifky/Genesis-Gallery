@@ -63,6 +63,22 @@
       from { opacity: 0; transform: translateY(30px) scale(0.95); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
+    .floating-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 400px;
+      height: auto;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      opacity: 0.25; /* Transparansi agar tidak menutupi teks */
+      animation: floatObject 5s ease-in-out infinite;
+      pointer-events: none; /* Agar tidak mengganggu klik */
+    }
+    @keyframes floatObject {
+      0%, 100% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg); }
+      50% { transform: translate(-50%, -50%) translateY(-25px) rotate(2deg); }
+    }
     .landing-content h1 {
       font-family: 'Cinzel', serif;
       font-size: 3.5rem;
@@ -381,14 +397,17 @@
   <!-- LANDING PAGE -->
   <div id="landing-page">
     <div class="landing-content">
-      <h1>WELCOME GALLERY GENESIS</h1>
-      <p>Decentralized Archive of Ritual Map Genesis Cards</p>
-      <button class="btn-connect-large" onclick="connectWalletAndEnter()">
-        <svg class="wallet-icon" viewBox="0 0 24 24">
-          <path d="M19.333 9.667H20c1.103 0 2 .897 2 2v6c0 1.103-.897 2-2 2h-.667v1c0 1.103-.897 2-2 2H3c-1.103 0-2-.897-2-2V7c0-1.103.897-2 2-2h12.333a2 2 0 0 1 2 2v2.667zm-1.333 8.333v-6H15v6h3zM3 7v13.333h13.333V18H13c-1.103 0-2-.897-2-2v-6c0-1.103.897-2 2-2h3.333V7H3z"/>
-        </svg>
-        CONNECT WALLET METAMASK
-      </button>
+      <img src="floating-object.png" class="floating-bg" alt="Floating Element" />
+      <div style="position: relative; z-index: 2;">
+        <h1>WELCOME GALLERY GENESIS</h1>
+        <p>Decentralized Archive of Ritual Map Genesis Cards</p>
+        <button class="btn-connect-large" onclick="connectWalletAndEnter()">
+          <svg class="wallet-icon" viewBox="0 0 24 24">
+            <path d="M19.333 9.667H20c1.103 0 2 .897 2 2v6c0 1.103-.897 2-2 2h-.667v1c0 1.103-.897 2-2 2H3c-1.103 0-2-.897-2-2V7c0-1.103.897-2 2-2h12.333a2 2 0 0 1 2 2v2.667zm-1.333 8.333v-6H15v6h3zM3 7v13.333h13.333V18H13c-1.103 0-2-.897-2-2v-6c0-1.103.897-2 2-2h3.333V7H3z"/>
+          </svg>
+          CONNECT WALLET METAMASK
+        </button>
+      </div>
     </div>
   </div>
 
