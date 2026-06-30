@@ -1,0 +1,17 @@
+{
+  "name": "genesis-gallery",
+  "version": "1.0.0",
+  "description": "Ritual Genesis Gallery dApp",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js --network ritual"
+  },
+  "dependencies": {
+    "ethers": "^6.10.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  }
+}

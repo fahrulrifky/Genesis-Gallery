@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ritual Genesis Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #eab308; /* Premium Gold */
+      --accent-glow: rgba(234, 179, 8, 0.4);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(234, 179, 8, 0.05), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(234, 179, 8, 0.03), transparent 25%);
+      color: var(--text);
+      font-family: 'Outfit', system-ui, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    header {
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(9, 9, 11, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-content {
+      flex: 1;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+    p.subtitle {
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-weight: 300;
+    }
+    .btn-connect {
+      padding: 0.8rem 1.5rem;
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px transparent;
+    }
+    .btn-connect:hover {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+      padding: 3rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .genesis-slot {
+      aspect-ratio: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+    .genesis-slot:hover {
+      transform: translateY(-5px) scale(1.05);
+      border-color: var(--accent);
+      box-shadow: 0 10px 20px var(--accent-glow);
+      z-index: 10;
+    }
+    .slot-no {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      z-index: 2;
+    }
+    .slot-content {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.05);
+      transition: color 0.3s;
+    }
+    .genesis-slot:hover .slot-content {
+      color: rgba(234, 179, 8, 0.2);
+    }
+    .genesis-slot.claimed {
+      background: rgba(234, 179, 8, 0.05);
+      border-color: rgba(234, 179, 8, 0.4);
+    }
+    .genesis-slot.claimed .slot-content {
+      display: none;
+    }
+    .genesis-slot.claimed .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+      transition: opacity 0.3s, transform 0.5s;
+    }
+    .genesis-slot.claimed:hover .card-img {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    .slot-owner-info {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      padding: 4px;
+      font-size: 0.6rem;
+      text-align: center;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      color: var(--accent);
+    }
+    .genesis-slot.claimed:hover .slot-owner-info {
+      transform: translateY(0);
+    }
+    
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .modal {
+      background: #18181b;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 2.5rem;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    .modal h2 { 
+      margin-top: 0; 
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 1rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.9rem;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      box-sizing: border-box;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2);
+    }
+    button.btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 1rem;
+      font-family: 'Outfit', sans-serif;
+    }
+    button.btn-submit:hover {
+      background: #facc15;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(234, 179, 8, 0.3);
+    }
+    button.btn-submit:disabled {
+      background: #475569;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      transition: color 0.2s;
+    }
+    .close-btn:hover {
+      color: #fff;
+    }
+    .status-msg {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      text-align: center;
+      color: var(--accent);
+      min-height: 1.2rem;
+    }
+
+    /* Loader */
+    .loader {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,0,0,0.3);
+      border-radius: 50%;
+      border-top-color: #000;
+      animation: spin 1s ease-in-out infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div style="width: 150px;"></div>
+    <div class="header-content">
+      <h1>RITUAL GENESIS GALLERY</h1>
+      <p class="subtitle">Klaim dan tampilkan Genesis Card Anda secara On-Chain</p>
+    </div>
+    <div style="width: 150px; text-align: right;">
+      <button class="btn-connect" id="btn-connect" onclick="connectWallet()">Connect Wallet</button>
+    </div>
+  </header>
+
+  <div class="gallery-container" id="gallery">
+    <!-- Slots generated dynamically -->
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <span class="close-btn" onclick="closeModal()">✕</span>
+      <h2 id="modal-title">Klaim Genesis #</h2>
+      <div class="form-group">
+        <label>Akun X (Twitter)</label>
+        <input type="text" id="x-handle" placeholder="@0xkrta">
+      </div>
+      <div class="form-group">
+        <label>Akun Discord</label>
+        <input type="text" id="discord-handle" placeholder="@0xkrtka">
+      </div>
+      <div class="form-group">
+        <label>Link Gambar / Genesis URL</label>
+        <input type="text" id="genesis-link" placeholder="https://www.ritualmap.net/genesis/...">
+      </div>
+      <button class="btn-submit" id="btn-submit" onclick="submitClaim()">
+        <span id="btn-text">Klaim dengan Gas Fee</span>
+        <div class="loader" id="submit-loader"></div>
+      </button>
+      <div class="status-msg" id="status-msg"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.10.0/ethers.umd.min.js"></script>
+  <script>
+    // Smart Contract Configuration
+    // TODO: Ganti dengan alamat contract yang sudah di-deploy
+    const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"; 
+    
+    const ABI = [
+      "function claimSlot(uint256 _genesisNo, string _xHandle, string _discordHandle, string _imageLink) external",
+      "function gallery(uint256) view returns (address owner, string xHandle, string discordHandle, string imageLink, bool isClaimed)",
+      "function getAllGallery() external view returns (tuple(address owner, string xHandle, string discordHandle, string imageLink, bool isClaimed)[])"
+    ];
+
+    const TOTAL_SLOTS = 1000;
+    const galleryEl = document.getElementById('gallery');
+    
+    let selectedSlot = null;
+    let provider, signer, contract;
+    let userAddress = null;
+
+    // Inisialisasi Galeri Kosong
+    function initGallery() {
+      galleryEl.innerHTML = '';
+      for (let i = 1; i <= TOTAL_SLOTS; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'genesis-slot';
+        slot.id = `slot-${i}`;
+        slot.innerHTML = `
+          <span class="slot-no">#${i}</span>
+          <div class="slot-content">?</div>
+        `;
+        slot.onclick = () => openModal(i);
+        galleryEl.appendChild(slot);
+      }
+    }
+
+    // Connect Wallet (MetaMask)
+    async function connectWallet() {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          provider = new ethers.BrowserProvider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          signer = await provider.getSigner();
+          userAddress = accounts[0];
+          
+          contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+          
+          document.getElementById('btn-connect').innerText = 
+            userAddress.substring(0, 6) + "..." + userAddress.substring(38);
+            
+          document.getElementById('btn-connect').style.background = "var(--accent)";
+          document.getElementById('btn-connect').style.color = "#000";
+          
+          loadGalleryData();
+        } catch (error) {
+          console.error("User rejected request", error);
+        }
+      } else {
+        alert("Harap install MetaMask untuk menggunakan dApp ini!");
+      }
+    }
+
+    // Load Data dari Smart Contract
+    async function loadGalleryData() {
+      if (!contract) return;
+      
+      try {
+        // Ambil semua data sekaligus
+        const allCards = await contract.getAllGallery();
+        
+        allCards.forEach((card, index) => {
+          const slotNo = index + 1;
+          if (card.isClaimed) {
+            updateSlotUI(slotNo, card);
+          }
+        });
+      } catch (error) {
+        console.error("Error loading gallery data. Contract might not be deployed yet.", error);
+      }
+    }
+
+    // Update UI Slot
+    function updateSlotUI(slotNo, cardData) {
+      const slot = document.getElementById(`slot-${slotNo}`);
+      if (!slot) return;
+      
+      slot.classList.add('claimed');
+      
+      // Handle the image link logic to display something visually appealing
+      let imgSrc = cardData.imageLink;
+      if (!imgSrc.match(/\.(jpeg|jpg|gif|png)$/)) {
+        // If it's a URL like ritualmap.net, we might want to use a placeholder or API to generate preview
+        imgSrc = `https://api.dicebear.com/7.x/identicon/svg?seed=${slotNo}&backgroundColor=eab308`;
+      }
+
+      slot.innerHTML = `
+        <span class="slot-no">#${slotNo}</span>
+        <img class="card-img" src="${imgSrc}" onerror="this.src='https://api.dicebear.com/7.x/identicon/svg?seed=${slotNo}&backgroundColor=eab308'" />
+        <div class="slot-owner-info">
+          <div>${cardData.xHandle || '-'}</div>
+        </div>
+      `;
+    }
+
+    // Modal Logic
+    function openModal(slotNo) {
+      selectedSlot = slotNo;
+      document.getElementById('modal-title').innerText = `Klaim Genesis #${slotNo}`;
+      document.getElementById('status-msg').innerText = '';
+      
+      const modal = document.getElementById('modal');
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    // Submit ke Blockchain
+    async function submitClaim() {
+      if (!signer || !contract) {
+        alert("Silakan Connect Wallet terlebih dahulu!");
+        return;
+      }
+
+      const xHandle = document.getElementById('x-handle').value;
+      const discordHandle = document.getElementById('discord-handle').value;
+      const genesisLink = document.getElementById('genesis-link').value;
+
+      if (!xHandle || !genesisLink) {
+        document.getElementById('status-msg').innerText = "Data tidak lengkap!";
+        document.getElementById('status-msg').style.color = "var(--danger)";
+        return;
+      }
+
+      const btnSubmit = document.getElementById('btn-submit');
+      const btnText = document.getElementById('btn-text');
+      const loader = document.getElementById('submit-loader');
+      const statusMsg = document.getElementById('status-msg');
+
+      try {
+        // UI Loading State
+        btnSubmit.disabled = true;
+        btnText.style.display = 'none';
+        loader.style.display = 'block';
+        statusMsg.style.color = "var(--accent)";
+        statusMsg.innerText = "Menunggu konfirmasi transaksi (Gas Fee)...";
+
+        // Eksekusi Smart Contract
+        const tx = await contract.claimSlot(
+          selectedSlot,
+          xHandle,
+          discordHandle,
+          genesisLink
+        );
+
+        statusMsg.innerText = "Transaksi dikirim. Menunggu konfirmasi jaringan...";
+
+        // Tunggu transaksi selesai
+        await tx.wait();
+
+        statusMsg.style.color = "#4ade80"; // Success green
+        statusMsg.innerText = "Klaim Berhasil!";
+
+        // Update UI Galeri
+        updateSlotUI(selectedSlot, {
+          xHandle,
+          discordHandle,
+          imageLink: genesisLink,
+          isClaimed: true
+        });
+
+        setTimeout(closeModal, 2000);
+      } catch (error) {
+        console.error(error);
+        statusMsg.style.color = "var(--danger)";
+        statusMsg.innerText = error.reason || "Transaksi dibatalkan atau gagal.";
+      } finally {
+        // Reset UI
+        btnSubmit.disabled = false;
+        btnText.style.display = 'block';
+        loader.style.display = 'none';
+      }
+    }
+
+    // Initialize pada saat halaman dimuat
+    window.onload = () => {
+      initGallery();
+      
+      // Auto-connect jika sebelumnya sudah terhubung
+      if (typeof window.ethereum !== 'undefined') {
+        window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+          if (accounts.length > 0) {
+            connectWallet();
+          }
+        });
+        
+        // Listeners
+        window.ethereum.on('accountsChanged', (accounts) => {
+          if(accounts.length > 0) connectWallet();
+          else window.location.reload();
+        });
+      }
+    };
+  </script>
+</body>
+</html>
