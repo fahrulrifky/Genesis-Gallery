@@ -289,6 +289,68 @@
     .genesis-slot.claimed:hover .slot-owner-info {
       transform: translateY(0);
     }
+
+    /* SEARCH TOOLBAR */
+    .toolbar {
+      max-width: 1400px;
+      margin: 2rem auto 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 4px 8px 4px 16px;
+      transition: all 0.3s;
+    }
+    .search-box:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(234, 179, 8, 0.2);
+    }
+    .search-box input {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      width: 140px;
+      outline: none;
+      font-family: 'Outfit', sans-serif;
+    }
+    .search-box input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+    .search-suffix {
+      color: rgba(255, 255, 255, 0.4);
+      margin-right: 12px;
+      font-weight: 600;
+    }
+    .btn-search {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 16px;
+      padding: 6px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Cinzel', serif;
+      transition: transform 0.2s;
+    }
+    .btn-search:hover {
+      transform: scale(1.05);
+    }
+    /* Hide input number arrows */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
     
     /* MODAL */
     .modal-overlay {
@@ -510,6 +572,9 @@
       .landing-content { padding: 1.5rem; margin: 1rem; }
       .landing-content h1 { font-size: 1.8rem; }
       .btn-connect-large { padding: 1rem; font-size: 0.85rem; }
+      
+      .toolbar { justify-content: center; margin-top: 1.5rem; }
+      .search-box input { width: 120px; }
     }
   </style>
 </head>
@@ -547,6 +612,14 @@
         <button class="btn-connect" id="btn-connect" onclick="connectWalletAndEnter()">Connected</button>
       </div>
     </header>
+
+    <div class="toolbar">
+      <div class="search-box">
+        <input type="number" id="search-input" placeholder="Search No..." min="1" max="1000">
+        <span class="search-suffix">/ 1000</span>
+        <button class="btn-search" onclick="scrollToSlot()">GO</button>
+      </div>
+    </div>
 
     <div class="gallery-container" id="gallery">
       <!-- Slots generated dynamically -->
@@ -615,6 +688,13 @@
         slot.onclick = () => openModal(i);
         galleryEl.appendChild(slot);
       }
+      
+      // Add Enter key event listener for search
+      document.getElementById('search-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          scrollToSlot();
+        }
+      });
     }
 
     // Connect Wallet (MetaMask) and transition to main app
@@ -732,6 +812,32 @@
           <div>${cardData.xHandle || '-'}</div>
         </div>
       `;
+    }
+
+    function scrollToSlot() {
+      const val = document.getElementById('search-input').value;
+      const num = parseInt(val);
+      if (isNaN(num) || num < 1 || num > 1000) {
+        alert("Please enter a valid Genesis number between 1 and 1000.");
+        return;
+      }
+      
+      const slotEl = document.getElementById(`slot-${num}`);
+      if (slotEl) {
+        slotEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Add a temporary glow effect
+        slotEl.style.transition = "all 0.5s ease";
+        slotEl.style.boxShadow = "0 0 30px rgba(234, 179, 8, 0.8)";
+        slotEl.style.transform = "scale(1.05)";
+        slotEl.style.zIndex = "10";
+        
+        setTimeout(() => {
+          slotEl.style.boxShadow = "";
+          slotEl.style.transform = "";
+          slotEl.style.zIndex = "";
+        }, 2000);
+      }
     }
 
     // Modal Logic
