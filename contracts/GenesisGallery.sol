@@ -17,8 +17,14 @@ contract RitualGenesisGallery {
     // Mapping nomor genesis ke datanya
     mapping(uint256 => GenesisCard) public gallery;
 
+    // Admin address for moderation
+    address public constant ADMIN = 0xf323551231727559a8b2684f8f039c37b693E5d7;
+
     // Event yang terpancar ketika slot diklaim
     event SlotClaimed(uint256 indexed genesisNo, address indexed owner, string xHandle, string discordHandle);
+    
+    // Event ketika admin menghapus slot
+    event SlotDeleted(uint256 indexed genesisNo, address indexed admin);
 
     /**
      * @dev Fungsi untuk mengklaim atau memperbarui slot Genesis
@@ -47,6 +53,27 @@ contract RitualGenesisGallery {
         card.isClaimed = true;
 
         emit SlotClaimed(_genesisNo, msg.sender, _xHandle, _discordHandle);
+    }
+
+    /**
+     * @dev Fungsi admin untuk menghapus slot yang salah/spam
+     * @param _genesisNo Nomor Genesis yang ingin dihapus
+     */
+    function deleteSlot(uint256 _genesisNo) external {
+        require(msg.sender == ADMIN, "Only admin can delete slots");
+        require(_genesisNo > 0 && _genesisNo <= MAX_GENESIS, "Invalid Genesis Number");
+        require(gallery[_genesisNo].isClaimed, "Slot is not claimed yet");
+        
+        GenesisCard storage card = gallery[_genesisNo];
+        
+        // Reset data
+        card.owner = address(0);
+        card.xHandle = "";
+        card.discordHandle = "";
+        card.imageLink = "";
+        card.isClaimed = false;
+
+        emit SlotDeleted(_genesisNo, msg.sender);
     }
 
     /**
