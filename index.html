@@ -63,6 +63,22 @@
       from { opacity: 0; transform: translateY(30px) scale(0.95); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
+    .global-logo {
+      position: fixed;
+      top: 2rem;
+      left: 2rem;
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      animation: spinSlow 12s linear infinite;
+      z-index: 10000;
+      pointer-events: none;
+      filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.3));
+    }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
     .floating-bg {
       position: absolute;
       top: 50%;
@@ -393,6 +409,9 @@
   </style>
 </head>
 <body>
+
+  <!-- GLOBAL LOGO -->
+  <img src="LOGO_RITUAL.png" class="global-logo" alt="Ritual Logo" onerror="this.style.display='none'" />
 
   <!-- LANDING PAGE -->
   <div id="landing-page">
