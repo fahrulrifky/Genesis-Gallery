@@ -965,8 +965,10 @@
           document.getElementById('card-view-x').innerText = cardData.xHandle || "-";
           document.getElementById('card-view-discord').innerText = cardData.discordHandle || "-";
           
+          let originalLink = cardData.imageLink || "https://genesis-ritual.vercel.app/";
+          
           const tweetText = `My Genesis. On display. Forever.\n\n#${slotNo} / 1000\nhttps://genesis-ritual.vercel.app/\n\n@ritualnet @0xkrtka #BuildOnRitual #Genesis1000`;
-          document.getElementById('card-view-share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+          document.getElementById('card-view-share-x').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(originalLink)}`;
         }
 
         if (isAdmin) {
