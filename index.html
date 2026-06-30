@@ -675,22 +675,45 @@
           <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </span>
         <h2 id="modal-title">Showcase Genesis #</h2>
-        <div class="form-group">
-          <label>X (Twitter) Handle</label>
-          <input type="text" id="x-handle" placeholder="@0xkrta">
+        
+        <!-- FORM VIEW (For Unclaimed Slots) -->
+        <div id="modal-form-view">
+          <div class="form-group">
+            <label>X (Twitter) Handle</label>
+            <input type="text" id="x-handle" placeholder="@0xkrta">
+          </div>
+          <div class="form-group">
+            <label>Discord Handle</label>
+            <input type="text" id="discord-handle" placeholder="@0xkrtka">
+          </div>
+          <div class="form-group">
+            <label>Image Link / Genesis URL</label>
+            <input type="text" id="genesis-link" placeholder="https://www.ritualmap.net/genesis/...">
+          </div>
+          <button class="btn-submit" id="btn-submit" onclick="submitClaim()">
+            <span id="btn-text">Showcase with Gas Fee</span>
+            <div class="loader" id="submit-loader"></div>
+          </button>
         </div>
-        <div class="form-group">
-          <label>Discord Handle</label>
-          <input type="text" id="discord-handle" placeholder="@0xkrtka">
+
+        <!-- CARD VIEW (For Claimed Slots) -->
+        <div id="modal-card-view" style="display: none; text-align: center;">
+          <img id="card-view-img" src="" style="width: 100%; max-width: 400px; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <div style="font-size: 1rem; margin-bottom: 1rem;">
+            <span style="color: #888;">Owner:</span> <span id="card-view-owner" style="color: var(--accent); font-weight: bold;"></span>
+          </div>
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+            <div style="background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 8px; flex: 1;">
+              <span style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">X (Twitter)</span>
+              <span id="card-view-x" style="font-size: 1rem; font-weight: 600;"></span>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 8px; flex: 1;">
+              <span style="font-size: 0.75rem; color: #888; display: block; margin-bottom: 4px;">Discord</span>
+              <span id="card-view-discord" style="font-size: 1rem; font-weight: 600;"></span>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Image Link / Genesis URL</label>
-          <input type="text" id="genesis-link" placeholder="https://www.ritualmap.net/genesis/...">
-        </div>
-        <button class="btn-submit" id="btn-submit" onclick="submitClaim()">
-          <span id="btn-text">Showcase with Gas Fee</span>
-          <div class="loader" id="submit-loader"></div>
-        </button>
+
         <button class="btn-submit" id="btn-admin-delete" style="display: none; background: var(--danger); border-color: var(--danger); margin-top: 10px;" onclick="submitAdminDelete()">
           <span id="btn-delete-text">Admin Delete Slot</span>
           <div class="loader" id="delete-loader"></div>
@@ -717,6 +740,7 @@
     let selectedSlot = null;
     let provider, signer, contract;
     let userAddress = null;
+    let galleryData = {}; // Store loaded card data
 
     // Inisialisasi Galeri Kosong
     function initGallery() {
@@ -823,6 +847,7 @@
         allCards.forEach((card, index) => {
           const slotNo = index + 1;
           if (card.isClaimed) {
+            galleryData[slotNo] = card;
             updateSlotUI(slotNo, card);
           }
         });
@@ -893,23 +918,42 @@
       const isClaimed = document.getElementById(`slot-${slotNo}`).classList.contains('claimed');
       const isAdmin = userAddress && userAddress.toLowerCase() === "0xf323551231727559a8b2684f8f039c37b693E5d7".toLowerCase();
       
-      const formGroups = document.querySelectorAll('.form-group');
-      const submitBtn = document.getElementById('btn-submit');
+      const formView = document.getElementById('modal-form-view');
+      const cardView = document.getElementById('modal-card-view');
       const deleteBtn = document.getElementById('btn-admin-delete');
 
       if (isClaimed) {
+        document.getElementById('modal-title').innerText = `Genesis #${slotNo}`;
+        formView.style.display = 'none';
+        cardView.style.display = 'block';
+
+        const cardData = galleryData[slotNo];
+        if (cardData) {
+          let imgSrc = cardData.imageLink;
+          if (imgSrc && imgSrc.includes("ritualmap.net/genesis/")) {
+            if (!imgSrc.endsWith("/card")) {
+              if (imgSrc.endsWith("/")) imgSrc = imgSrc.slice(0, -1);
+              imgSrc = imgSrc + "/card";
+            }
+          } else if (!imgSrc || !imgSrc.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+            imgSrc = `https://api.dicebear.com/7.x/identicon/svg?seed=${slotNo}&backgroundColor=eab308`;
+          }
+          
+          document.getElementById('card-view-img').src = imgSrc;
+          document.getElementById('card-view-owner').innerText = cardData.owner ? (cardData.owner.substring(0,6) + "..." + cardData.owner.substring(38)) : "-";
+          document.getElementById('card-view-x').innerText = cardData.xHandle || "-";
+          document.getElementById('card-view-discord').innerText = cardData.discordHandle || "-";
+        }
+
         if (isAdmin) {
-          formGroups.forEach(el => el.style.display = 'none');
-          submitBtn.style.display = 'none';
           deleteBtn.style.display = 'block';
-          document.getElementById('modal-title').innerText = `Admin Delete Genesis #${slotNo}`;
         } else {
-          // Jika bukan admin dan slot sudah terisi, tidak lakukan apa-apa
-          return;
+          deleteBtn.style.display = 'none';
         }
       } else {
-        formGroups.forEach(el => el.style.display = 'block');
-        submitBtn.style.display = 'block';
+        document.getElementById('modal-title').innerText = `Showcase Genesis #${slotNo}`;
+        formView.style.display = 'block';
+        cardView.style.display = 'none';
         deleteBtn.style.display = 'none';
       }
 
