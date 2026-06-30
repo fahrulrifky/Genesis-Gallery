@@ -1,7 +1,7 @@
 Add-Type -AssemblyName System.Drawing
 
-$width = 1080
-$height = 1920
+$width = 1200
+$height = 630
 $bgImage = [System.Drawing.Image]::FromFile("c:\Users\user\genesis-gallery\landing-bg.png")
 
 $bmp = New-Object System.Drawing.Bitmap($width, $height)
@@ -9,7 +9,7 @@ $g = [System.Drawing.Graphics]::FromImage($bmp)
 $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
 $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit
 
-# Draw background (scale to cover properly, center crop if needed)
+# Draw background
 $ratioX = $width / $bgImage.Width
 $ratioY = $height / $bgImage.Height
 $ratio = [math]::Max($ratioX, $ratioY)
@@ -22,12 +22,12 @@ $posY = [int](($height - $newHeight) / 2)
 $g.DrawImage($bgImage, $posX, $posY, $newWidth, $newHeight)
 
 # Add a dark overlay so text is readable
-$overlayBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(100, 0, 0, 0))
+$overlayBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(180, 0, 0, 0))
 $g.FillRectangle($overlayBrush, 0, 0, $width, $height)
 
 # Fonts
-$fontTitle = New-Object System.Drawing.Font("Arial", 50, [System.Drawing.FontStyle]::Bold)
-$fontSub = New-Object System.Drawing.Font("Arial", 30, [System.Drawing.FontStyle]::Regular)
+$fontTitle = New-Object System.Drawing.Font("Arial", 48, [System.Drawing.FontStyle]::Bold)
+$fontSub = New-Object System.Drawing.Font("Arial", 28, [System.Drawing.FontStyle]::Regular)
 $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::White)
 $brushGold = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 234, 179, 8))
 
@@ -37,8 +37,9 @@ $sub = "Showcase your Genesis Card On-Chain"
 $sf = New-Object System.Drawing.StringFormat
 $sf.Alignment = [System.Drawing.StringAlignment]::Center
 
-$rectTitle = New-Object System.Drawing.RectangleF(0, 150, $width, 100)
-$rectSub = New-Object System.Drawing.RectangleF(0, 240, $width, 100)
+# Vertically center the text blocks
+$rectTitle = New-Object System.Drawing.RectangleF(0, 220, $width, 100)
+$rectSub = New-Object System.Drawing.RectangleF(0, 310, $width, 100)
 
 $g.DrawString($title, $fontTitle, $brushGold, $rectTitle, $sf)
 $g.DrawString($sub, $fontSub, $brush, $rectSub, $sf)
@@ -52,4 +53,4 @@ $overlayBrush.Dispose()
 $brush.Dispose()
 $brushGold.Dispose()
 
-Write-Host "Generated twitter-poster.jpg"
+Write-Host "Generated landscape twitter-poster.jpg"
