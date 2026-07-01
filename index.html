@@ -649,11 +649,8 @@
       <div style="position: relative; z-index: 2;">
         <h1>WELCOME GALLERY GENESIS</h1>
         <p>Decentralized Archive of Ritual Map Genesis Cards</p>
-        <button class="btn-connect-large" onclick="connectWalletAndEnter()">
-          <svg class="wallet-icon" viewBox="0 0 24 24">
-            <path d="M19.333 9.667H20c1.103 0 2 .897 2 2v6c0 1.103-.897 2-2 2h-.667v1c0 1.103-.897 2-2 2H3c-1.103 0-2-.897-2-2V7c0-1.103.897-2 2-2h12.333a2 2 0 0 1 2 2v2.667zm-1.333 8.333v-6H15v6h3zM3 7v13.333h13.333V18H13c-1.103 0-2-.897-2-2v-6c0-1.103.897-2 2-2h3.333V7H3z"/>
-          </svg>
-          CONNECT WALLET METAMASK
+        <button class="btn-connect-large" onclick="enterGalleryOnly()">
+          ENTER GALLERY
         </button>
       </div>
     </div>
@@ -668,7 +665,7 @@
         <p class="subtitle">Showcase your Genesis Card On-Chain</p>
       </div>
       <div class="header-right">
-        <button class="btn-connect" id="btn-connect" onclick="connectWalletAndEnter()">Connected</button>
+        <button class="btn-connect" id="btn-connect" onclick="connectWalletAndEnter()">Connect Wallet</button>
       </div>
     </header>
 
@@ -742,6 +739,24 @@
         <div class="status-msg" id="status-msg"></div>
       </div>
     </div>
+
+    <!-- WALLET MODAL -->
+    <div class="modal-overlay" id="wallet-modal">
+      <div class="modal" style="max-width: 320px;">
+        <span class="close-btn" onclick="document.getElementById('wallet-modal').classList.remove('active')">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </span>
+        <h2 style="text-align: center; margin-bottom: 1rem; border:none; padding:0;">Select Wallet</h2>
+        <button class="btn-submit" onclick="connectMetaMask()" style="margin-top:0.5rem; display:flex; align-items:center; justify-content:center; gap:10px; font-size:1rem; border-radius:12px;">
+          <svg viewBox="0 0 318.6 318.6" width="20" height="20"><path fill="#e2761b" d="m274.1 35.5-99.5 73.9L193 65.8z"/><path fill="#e4761b" d="m44.4 35.5 98.7 74.6-17.5-44.3zm193.9 171.3-26.5 40.6 56.7 15.6 16.3-55.3zm-204.4.9L50.1 263l56.7-15.6-26.5-40.6z"/><path fill="#e4761b" d="m103.6 138.2-15.8 23.9 56.3 2.5-2-60.5zm111.3 0-39-34.8-1.3 61.2 56.2-2.5zM106.8 247.4l33.8-16.5-29.2-22.8zm71.1-16.5 33.9 16.5-4.7-39.3z"/><path fill="#d7c1b3" d="m211.8 247.4-33.9-16.5 2.7 22.1-.3 9.3zm-105 0 31.5 14.9-.2-9.3 2.5-22.1z"/><path fill="#233447" d="m138.8 193.5-28.2-8.3 19.9-9.1zm40.9 0 8.3-17.4 20 9.1z"/><path fill="#cd6116" d="m106.8 247.4 4.8-40.6-31.3.9zM207 206.8l4.8 40.6 26.5-39.7zm23.8-44.7-56.2 2.5 5.2 28.9 8.3-17.4 20 9.1zm-120.2 23.1 20-9.1 8.2 17.4 5.3-28.9-56.3-2.5z"/><path fill="#e4751f" d="m87.8 162.1 23.6 46-.8-22.9zm120.3 23.1-1 22.9 23.7-46zm-64-20.6-5.3 28.9 6.6 34.1 1.5-44.9zm30.5 0-2.7 18 1.2 45 6.7-34.1z"/><path fill="#f6851b" d="m179.8 193.5-6.7 34.1 4.8 3.3 29.2-22.8 1-22.9zm-69.2-8.3.8 22.9 29.2 22.8 4.8-3.3-6.6-34.1z"/><path fill="#c0ad9e" d="m180.3 262.3.3-9.3-2.5-2.2h-37.7l-2.3 2.2.2 9.3-31.5-14.9 11 9 22.3 15.5h38.3l22.4-15.5 11-9z"/><path fill="#161616" d="m177.9 230.9-4.8-3.3h-27.7l-4.8 3.3-2.5 22.1 2.3-2.2h37.7l2.5 2.2z"/><path fill="#763d16" d="m278.3 114.2 8.5-40.8-12.7-37.9-96.2 71.4 37 31.3 52.3 15.3 11.6-13.5-5-3.6 8-7.3-6.2-4.8 8-6.1zM31.8 73.4l8.5 40.8-5.4 4 8 6.1-6.1 4.8 8 7.3-5 3.6 11.5 13.5 52.3-15.3 37-31.3-96.2-71.4z"/><path fill="#f6851b" d="m267.2 153.5-52.3-15.3 15.9 23.9-23.7 46 31.2-.4h46.5zm-163.6-15.3-52.3 15.3-17.4 54.2h46.4l31.1.4-23.6-46zm71 26.4 3.3-57.7 15.2-41.1h-67.5l15 41.1 3.5 57.7 1.2 18.2.1 44.8h27.7l.2-44.8z"/></svg>
+          MetaMask
+        </button>
+        <button class="btn-submit" onclick="connectOKX()" style="margin-top:1rem; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; gap:10px; font-size:1rem; border:1px solid #333; border-radius:12px;">
+          <svg viewBox="0 0 40 40" width="20" height="20" fill="none"><path d="M15.5 10h-5A.5.5 0 0 0 10 10.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5zm14 0h-5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5zm-7 7h-5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5zm-7 7h-5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5zm14 0h-5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z" fill="#fff"/></svg>
+          OKX Wallet
+        </button>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.10.0/ethers.umd.min.js"></script>
@@ -786,53 +801,126 @@
       });
     }
 
-    // Connect Wallet (MetaMask) and transition to main app
-    async function connectWalletAndEnter() {
-      if (typeof window.ethereum !== 'undefined') {
+    // Masuk tanpa wallet (Read Only)
+    async function enterGalleryOnly() {
+      enterMainGallery();
+      if (!contract) {
         try {
-          provider = new ethers.BrowserProvider(window.ethereum);
-          const accounts = await provider.send("eth_requestAccounts", []);
-          signer = await provider.getSigner();
-          userAddress = accounts[0];
-          
-          contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-          
-          const btnConnect = document.getElementById('btn-connect');
-          btnConnect.innerText = userAddress.substring(0, 6) + "..." + userAddress.substring(38);
-          btnConnect.style.background = "var(--accent)";
-          btnConnect.style.color = "#000";
-          
-          // Ubah fungsi klik menjadi disconnect
-          btnConnect.onclick = disconnectWallet;
-          
-          // Efek hover untuk menampilkan tulisan Disconnect
-          btnConnect.addEventListener('mouseenter', () => {
-            if (userAddress) {
-              btnConnect.innerText = "Disconnect";
-              btnConnect.style.background = "var(--danger)";
-              btnConnect.style.color = "#fff";
-              btnConnect.style.borderColor = "var(--danger)";
-            }
-          });
-          btnConnect.addEventListener('mouseleave', () => {
-            if (userAddress) {
-              btnConnect.innerText = userAddress.substring(0, 6) + "..." + userAddress.substring(38);
-              btnConnect.style.background = "var(--accent)";
-              btnConnect.style.color = "#000";
-              btnConnect.style.borderColor = "var(--accent)";
-            }
-          });
-          
-          // Transisi dari Landing Page ke Main App
-          enterMainGallery();
-
+          const readProvider = new ethers.JsonRpcProvider("https://rpc.ritualfoundation.org");
+          contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, readProvider);
           loadGalleryData();
-        } catch (error) {
-          console.error("User rejected request", error);
+        } catch (err) {
+          console.error("Failed to init read-only provider", err);
         }
-      } else {
-        alert("Please install MetaMask to use this dApp!");
       }
+    }
+
+    function connectWalletAndEnter() {
+      document.getElementById('wallet-modal').classList.add('active');
+    }
+
+    async function finishConnect(rawProvider) {
+      try {
+        // Check and switch network to Ritual
+        try {
+          await rawProvider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x7bb' }], // 1979 in hex
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            try {
+              await rawProvider.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: '0x7bb',
+                  chainName: 'Ritual',
+                  rpcUrls: ['https://rpc.ritualfoundation.org'],
+                  nativeCurrency: { name: 'RITUAL', symbol: 'RITUAL', decimals: 18 },
+                  blockExplorerUrls: ['https://explorer.ritualfoundation.org']
+                }]
+              });
+            } catch (addError) {
+              alert("Please add and switch to the Ritual network to continue.");
+              return;
+            }
+          } else {
+            alert("Please switch to the Ritual network to continue.");
+            return;
+          }
+        }
+
+        provider = new ethers.BrowserProvider(rawProvider);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        signer = await provider.getSigner();
+        userAddress = accounts[0];
+        contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+        
+        document.getElementById('wallet-modal').classList.remove('active');
+
+        const btnConnect = document.getElementById('btn-connect');
+        btnConnect.innerText = userAddress.substring(0, 6) + "..." + userAddress.substring(38);
+        btnConnect.style.background = "var(--accent)";
+        btnConnect.style.color = "#000";
+        btnConnect.onclick = disconnectWallet;
+        
+        btnConnect.addEventListener('mouseenter', () => {
+          if (userAddress) {
+            btnConnect.innerText = "Disconnect";
+            btnConnect.style.background = "var(--danger)";
+            btnConnect.style.color = "#fff";
+            btnConnect.style.borderColor = "var(--danger)";
+          }
+        });
+        btnConnect.addEventListener('mouseleave', () => {
+          if (userAddress) {
+            btnConnect.innerText = userAddress.substring(0, 6) + "..." + userAddress.substring(38);
+            btnConnect.style.background = "var(--accent)";
+            btnConnect.style.color = "#000";
+            btnConnect.style.borderColor = "var(--accent)";
+          }
+        });
+        
+        enterMainGallery();
+        loadGalleryData();
+
+        // Listeners for the selected provider
+        rawProvider.on('chainChanged', (chainId) => {
+          if (userAddress && chainId !== '0x7bb' && chainId !== '0x7BB' && chainId !== 1979) {
+            alert("Network changed. Please switch back to Ritual network.");
+            window.location.reload();
+          }
+        });
+        rawProvider.on('accountsChanged', () => {
+          if (userAddress) window.location.reload();
+        });
+
+      } catch (error) {
+        console.error("Connection error", error);
+        alert(error.message || "Connection failed");
+      }
+    }
+
+    async function connectMetaMask() {
+      const eth = window.ethereum;
+      let mmProvider = null;
+      if (eth) {
+        if (eth.providers) mmProvider = eth.providers.find(p => p.isMetaMask);
+        else if (eth.isMetaMask) mmProvider = eth;
+      }
+      if (!mmProvider) return alert("MetaMask not found!");
+      await finishConnect(mmProvider);
+    }
+
+    async function connectOKX() {
+      let okxProvider = window.okxwallet;
+      if (!okxProvider) {
+        const eth = window.ethereum;
+        if (eth && eth.providers) okxProvider = eth.providers.find(p => p.isOKExWallet || p.isOKX);
+        else if (eth && (eth.isOKExWallet || eth.isOKX)) okxProvider = eth;
+      }
+      if (!okxProvider) return alert("OKX Wallet not found! Please install the extension.");
+      await finishConnect(okxProvider);
     }
 
     function disconnectWallet() {
