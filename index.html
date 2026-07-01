@@ -1049,7 +1049,17 @@
           }
           
           document.getElementById('card-view-img').src = imgSrc;
-          document.getElementById('card-view-owner').innerText = cardData.owner ? (cardData.owner.substring(0,6) + "..." + cardData.owner.substring(38)) : "-";
+          
+          let ownerDisplay = "-";
+          if (cardData.owner) {
+            if (cardData.owner.toLowerCase() === "0xf323551231727559a8b2684f8f039c37b693e5d7".toLowerCase()) {
+              ownerDisplay = "Input by Developer";
+            } else {
+              ownerDisplay = cardData.owner.substring(0, 6) + "..." + cardData.owner.substring(38);
+            }
+          }
+          document.getElementById('card-view-owner').innerText = ownerDisplay;
+          
           document.getElementById('card-view-x').innerText = cardData.xHandle || "-";
           document.getElementById('card-view-discord').innerText = cardData.discordHandle || "-";
           
