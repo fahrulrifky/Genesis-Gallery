@@ -348,7 +348,8 @@
       margin: 2rem auto 0 auto;
       padding: 0 2rem;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
     }
     .search-box {
       display: flex;
@@ -670,6 +671,9 @@
     </header>
 
     <div class="toolbar">
+      <div class="showcase-counter" style="font-size: 1.2rem; font-weight: 600; font-family: 'Cinzel', serif; letter-spacing: 1px;">
+        Showcase Total: <span id="total-claimed" style="color: var(--accent); font-weight: 800;">0</span><span style="color: rgba(255,255,255,0.4); font-size: 1rem;"> / 1000</span>
+      </div>
       <div class="search-box">
         <input type="number" id="search-input" placeholder="Search No..." min="1" max="1000">
         <span class="search-suffix">/ 1000</span>
@@ -953,13 +957,17 @@
       try {
         const allCards = await contract.getAllGallery();
         
+        let claimedCount = 0;
         allCards.forEach((card, index) => {
           const slotNo = index + 1;
           if (card.isClaimed) {
+            claimedCount++;
             galleryData[slotNo] = card;
             updateSlotUI(slotNo, card);
           }
         });
+        const totalEl = document.getElementById('total-claimed');
+        if (totalEl) totalEl.innerText = claimedCount;
       } catch (error) {
         console.error("Error loading gallery data.", error);
       }
